@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+  echo "Usage: githubpull [URL-TO-GITHUB-PROFILE]"
+  exit 1
+fi
+
+url="$1"
+username=$(echo "$url" | awk -F'/' '{print $NF}')
+
+curl -s "https://api.github.com/users/$username/repos?per_page=100" |
+  grep '"name":' |
+  cut -d '"' -f 4 > "${username}.txt"
+
+echo "Repository list saved to ${username}.txt"
